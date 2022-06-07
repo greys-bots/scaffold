@@ -165,4 +165,4 @@ class CommandHandler {
 	}
 }
 
-module.exports = (bot) => new CommandHandler(bot);
+module.exports = (bot, path) => new CommandHandler(bot, path);
