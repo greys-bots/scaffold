@@ -1,6 +1,6 @@
 const DKEYS = [
 	'name',
-	'description'
+	'description',
 	'type',
 	'options'
 ]
