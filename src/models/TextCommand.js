@@ -1,9 +1,7 @@
 class TextCommand {
-	#bot;
-	#stores;
-
 	name;
 	description;
+	extra;
 	arguments = { };
 
 	usage = [];
@@ -11,10 +9,7 @@ class TextCommand {
 	permissions = [];
 	alias = [];
 
-	constructor(bot, stores, data) {
-		this.#bot = bot;
-		this.#stores = stores;
-
+	constructor(data) {
 		for(var k in data) {
 			this[k] = data[k]
 		}

@@ -6,9 +6,6 @@ const DKEYS = [
 ]
 
 class SlashCommand {
-	#bot;
-	#stores;
-
 	name;
 	description;
 	type = 1;
@@ -19,11 +16,9 @@ class SlashCommand {
 	permissions = [];
 	ephemeral = false;
 	
-	constructor(bot, stores, data) {
-		this.#bot = bot;
-		this.#stores = stores;
-		
-		for(var k in data) this[k] = data[k];
+	constructor(data) {
+		for(var k in data)
+			this[k] = data[k];
 	}
 
 	async execute(ctx) {
