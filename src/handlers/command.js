@@ -91,7 +91,7 @@ class CommandHandler {
 		}
 
 		try {
-			var res = await command.execute(this.bot, msg, args);
+			var res = await command.execute({bot: this.bot, msg, args});
 		} catch(e) {
 			return Promise.reject(e);
 		}
