@@ -11,6 +11,8 @@ class TextCommand {
 	permissions = [];
 	alias = [];
 
+	module;
+
 	constructor(data) {
 		this.subcommands = new Collection();
 		this.sub_aliases = new Collection();
@@ -24,15 +26,16 @@ class TextCommand {
 	}
 
 	addSubcommand(data) {
+		var c = data.name;
 		var cmd = data;
-		cmd.name = `${this.name} ${data.name}`;
+		cmd.name = `${this.name} ${c}`;
 		cmd.parent = this;
 		cmd.module = this.module;
 		cmd.guildOnly = cmd.guildOnly ?? this.guildOnly;
 		cmd.permissions = cmd.permissions ?? this.permissions;
-		this.sub_aliases.set(data.name, data.name);
-		if(data.alias) data.alias.forEach(a => this.sub_aliases.set(a, data.name));
-		this.subcommands.set(data.name, cmd);
+		this.sub_aliases.set(c, c);
+		if(data.alias) data.alias.forEach(a => this.sub_aliases.set(a, c));
+		this.subcommands.set(c, cmd);
 
 		return this;
 	}
