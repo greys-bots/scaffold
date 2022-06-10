@@ -6,6 +6,9 @@ const DKEYS = [
 ]
 
 class SlashCommand {
+	#bot;
+	#stores;
+
 	name;
 	description;
 	type = 1;
@@ -16,7 +19,10 @@ class SlashCommand {
 	permissions = [];
 	ephemeral = false;
 	
-	constructor(data) {
+	constructor(bot, stores, data) {
+		this.#bot = bot;
+		this.#stores = stores;
+		
 		for(var k in data) this[k] = data[k];
 	}
 
@@ -46,4 +52,4 @@ class SlashCommand {
 	}
 }
 
-module.exports = { SlashCommand }
+module.exports = SlashCommand;
