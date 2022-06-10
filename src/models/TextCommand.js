@@ -11,10 +11,9 @@ class TextCommand {
 	permissions = [];
 	alias = [];
 
-	subcommands = new Collection();
-	sub_aliases = new Collection();
-
 	constructor(data) {
+		this.subcommands = new Collection();
+		this.sub_aliases = new Collection();
 		for(var k in data) {
 			this[k] = data[k]
 		}
