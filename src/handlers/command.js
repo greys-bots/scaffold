@@ -41,9 +41,8 @@ class CommandHandler {
 			}
 
 			delete require.cache[require.resolve(f)];
-			var command = require(f);
+			var command = require(f)(this.bot, this.bot.stores);
 			command.module = mod;
-			command.name = file.slice(0, -3).toLowerCase();
 			command = this.registerSubcommands(command, mod);
 			commands.set(command.name, command);
 			mod.commands.set(command.name, command);
