@@ -16,7 +16,7 @@ class FrameClient extends Client {
 		if(!this.statuses?.length) return;
 
 		var target = this.statuses[this.status % this.statuses.length];
-		if(typeof target == "function") this.user.setActivity(await target());
+		if(typeof target == "function") this.user.setActivity(await target(this));
 		else this.user.setActivity(target);
 		this.status++;
 			
