@@ -1,3 +1,4 @@
+const { Collection } = require('discord.js');
 const DKEYS = [
 	'name',
 	'description',
@@ -15,6 +16,9 @@ class SlashCommand {
 	guildOnly = false;
 	permissions = [];
 	ephemeral = false;
+	module;
+
+	subcommands = new Collection();
 	
 	constructor(data) {
 		for(var k in data)
@@ -42,8 +46,18 @@ class SlashCommand {
 			data.dm_permission = false;
 		if(this.permissions?.length)
 			data.default_member_permissions = '0';
+		if(!data.options) data.options = [];
+		if(this.subcommands?.first())
+			data.options.concat(this.subcommands.map(sc => {
+				var d = sc.transform();
+				return { ...d, type: d.type ?? 1 }
+			}));
 
 		return data;
+	}
+
+	addSubcommand(scmd) {
+		this.subcommands.set(smcd.name, scmd);
 	}
 }
 
