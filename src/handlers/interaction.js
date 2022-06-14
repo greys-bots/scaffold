@@ -78,7 +78,6 @@ class InteractionHandler {
 				}
 
 				// inherit permissions from parent module
-				console.log(command, curmod)
 				command.permissions = command.permissions ?? curmod.permissions;
 				command.opPerms = command.opPerms ?? curmod.opPerms;
 				command.guildOnly = command.guildOnly ?? curmod.guildOnly;
@@ -92,8 +91,6 @@ class InteractionHandler {
 
 		this.bot.slashCommands = slashCommands; // for safe keeping
 		slashData = slashCommands.map(s => s.transform());
-		console.log(slashCommands);
-		console.log(slashData);
 
 		// all of below is just sending it off to discord
 		try {

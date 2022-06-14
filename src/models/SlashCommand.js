@@ -47,11 +47,13 @@ class SlashCommand {
 		if(this.permissions?.length)
 			data.default_member_permissions = '0';
 		if(!data.options) data.options = [];
-		if(this.subcommands?.first())
-			data.options.concat(this.subcommands.map(sc => {
+		if(this.subcommands?.size) {
+			data.options = data.options.concat(this.subcommands.map(sc => {
 				var d = sc.transform();
 				return { ...d, type: d.type ?? 1 }
 			}));
+		}
+			
 		if(this.type == 3) delete data.description;
 
 		return data;
