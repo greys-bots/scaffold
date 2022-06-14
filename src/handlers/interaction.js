@@ -153,16 +153,16 @@ class InteractionHandler {
 		long += cmd.name ?? cmd.name;
 
 		if(ctx.options.getSubcommandGroup(false)) {
-			cmd = cmd.options.find(o => o.name == ctx.options.getSubcommandGroup());
+			cmd = cmd.subcommands.get(ctx.options.getSubcommandGroup());
 			if(!cmd) return;
 			long += ` ${cmd.name}`;
 			var opt = ctx.options.getSubcommand(false);
 			if(opt) {
-				cmd = cmd.options.find(o => o.name == opt);
+				cmd = cmd.subcommands.get(opt);
 				if(cmd) long += ` ${cmd.name}`;
 			} else return;
 		} else if(ctx.options.getSubcommand(false)) {
-			cmd = cmd.options.find(o => o.name == ctx.options.getSubcommand());
+			cmd = cmd.subcommands.get(ctx.options.getSubcommand());
 			if(!cmd) return;
 			long += ` ${cmd.name}`;
 		}
