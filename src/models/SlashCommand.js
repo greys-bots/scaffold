@@ -52,6 +52,7 @@ class SlashCommand {
 				var d = sc.transform();
 				return { ...d, type: d.type ?? 1 }
 			}));
+		if(this.type == 3) delete data.description;
 
 		return data;
 	}
