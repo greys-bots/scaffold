@@ -65,7 +65,7 @@ class InteractionHandler {
 						if(!curmod) {
 							// start of loop again, also means we can
 							// safely set this as a top-level command in our collections
-							slashCommands.set(mod.data.name, group);
+							slashCommands.set(mod.name, group);
 						} else {
 							// otherwise it belongs nested below the current module data
 							curmod.addSubcommand(group);
@@ -78,6 +78,7 @@ class InteractionHandler {
 				}
 
 				// inherit permissions from parent module
+				console.log(command, curmod)
 				command.permissions = command.permissions ?? curmod.permissions;
 				command.opPerms = command.opPerms ?? curmod.opPerms;
 				command.guildOnly = command.guildOnly ?? curmod.guildOnly;
@@ -85,7 +86,7 @@ class InteractionHandler {
 				curmod.addSubcommand(command) // nest the command
 			} else {
 				// no mods? just make it top-level
-				slashCommands.set(command.data.name, command);
+				slashCommands.set(command.name, command);
 			}
 		}
 
@@ -152,21 +153,21 @@ class InteractionHandler {
 		var long = "";
 		var cmd = this.bot.slashCommands.get(ctx.commandName);
 		if(!cmd) return;
-		long += cmd.name ?? cmd.data.name;
+		long += cmd.name ?? cmd.name;
 
 		if(ctx.options.getSubcommandGroup(false)) {
-			cmd = cmd.options.find(o => o.data.name == ctx.options.getSubcommandGroup());
+			cmd = cmd.options.find(o => o.name == ctx.options.getSubcommandGroup());
 			if(!cmd) return;
-			long += ` ${cmd.data.name}`;
+			long += ` ${cmd.name}`;
 			var opt = ctx.options.getSubcommand(false);
 			if(opt) {
-				cmd = cmd.options.find(o => o.data.name == opt);
-				if(cmd) long += ` ${cmd.data.name}`;
+				cmd = cmd.options.find(o => o.name == opt);
+				if(cmd) long += ` ${cmd.name}`;
 			} else return;
 		} else if(ctx.options.getSubcommand(false)) {
-			cmd = cmd.options.find(o => o.data.name == ctx.options.getSubcommand());
+			cmd = cmd.options.find(o => o.name == ctx.options.getSubcommand());
 			if(!cmd) return;
-			long += ` ${cmd.data.name}`;
+			long += ` ${cmd.name}`;
 		}
 
 		if(cmd) cmd.long = long;

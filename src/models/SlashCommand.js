@@ -57,7 +57,8 @@ class SlashCommand {
 	}
 
 	addSubcommand(scmd) {
-		this.subcommands.set(smcd.name, scmd);
+		this.subcommands.set(scmd.name, scmd);
+		return this;
 	}
 }
 
