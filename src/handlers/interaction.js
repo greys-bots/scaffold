@@ -51,7 +51,7 @@ class InteractionHandler {
 						group = curmod;
 					} else {
 						// just get the group out of the curmod's subcommands
-						group = curmod.subcommands.get(x => mods[i]);
+						group = curmod.subcommands.get(mods[i]);
 					}
 
 					if(!group) {
