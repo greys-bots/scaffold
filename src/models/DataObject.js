@@ -18,7 +18,7 @@ class DataObject {
 	}
 
 	async save() {
-		var obj = await this.verify();
+		var obj = await this.verify((this.id != null));
 
 		var data;
 		if(this.id) data = await this.#store.update(this.id, obj, this.old);
