@@ -1,6 +1,11 @@
 const { Client, Intents } = require('discord.js');
 
 class FrameClient extends Client {
+	prefix = 'bot!';
+	statuses = [
+		`${this.prefix}h`
+	]
+	
 	constructor(clientOptions, botData) {
 		super(clientOptions);
 
