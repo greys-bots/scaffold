@@ -1,3 +1,5 @@
+const util = require('util');
+
 class DataStore {
 	bot;
 	db;
@@ -5,6 +7,12 @@ class DataStore {
 	constructor(bot, db) {
 		this.bot = bot;
 		this.db = db;
+	}
+
+	[util.inspect.custom](depth, opts) {
+		var {bot, db, ...rest} = this;
+
+		return rest;
 	}
 
 	async create(data) { }

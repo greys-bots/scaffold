@@ -1,16 +1,24 @@
+const util = require('util');
+
 class DataObject {
-	#store;
+	store;
 
 	constructor(store, keys, data = {}) {
 		this.KEYS = keys;
-		this.#store = store;
+		this.store = store;
 
 		for(var k in keys)
 			this[k] = data[k];
 	}
 
+	[util.inspect.custom](depth, opts) {
+		var {store, ...rest} = this;
+
+		return rest;
+	}
+
 	async fetch() {
-		var data = await this.#store.getID(this.id);
+		var data = await this.store.getID(this.id);
 		for(var k in this.KEYS)
 			this[k] = data[k];
 
@@ -21,15 +29,15 @@ class DataObject {
 		var obj = await this.verify((this.id != null));
 
 		var data;
-		if(this.id) data = await this.#store.update(this.id, obj, this.old);
-		else data = await this.#store.create(obj);
+		if(this.id) data = await this.store.update(this.id, obj, this.old);
+		else data = await this.store.create(obj);
 		for(var k in this.KEYS) this[k] = data[k];
 		this.old = Object.assign({}, data);
 		return this;
 	}
 
 	async delete() {
-		await this.#store.delete(this.id);
+		await this.store.delete(this.id);
 	}
 
 	async verify(patch = true) {
