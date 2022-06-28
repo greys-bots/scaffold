@@ -1,6 +1,7 @@
 const { Collection } = require('discord.js');
 
 class CommandHandler {
+	menus = new Map();
 	cooldowns = new Map();
 
 	constructor(bot, path) {
@@ -88,7 +89,7 @@ class CommandHandler {
 		}
 
 		try {
-			var res = await command.execute({bot: this.bot, msg, args});
+			var result = await command.execute({bot: this.bot, msg, args});
 		} catch(e) {
 			return Promise.reject(e);
 		}
@@ -97,7 +98,64 @@ class CommandHandler {
 			this.cooldowns.set(`${msg.author.id}-${command.name}`, Date.now() + (command.cooldown * 1000));
 			setTimeout(() => this.cooldowns.delete(`${msg.author.id}-${command.name}`), command.cooldown * 1000);
 		}
-		return res;
+		
+		if(!result) return;
+		if(Array.isArray(result)) { //embeds
+			var message = await msg.channel.send({embeds: [result[0].embed ?? result[0]]});
+			if(result[1]) {
+				this.menus.set(message.id, {
+					user: msg.author.id,
+					data: result,
+					index: 0,
+					timeout: setTimeout(()=> {
+						if(!this.menus.get(message.id)) return;
+						try {
+							message.reactions.removeAll();
+						} catch(e) {
+							console.log(e);
+						}
+						this.menus.delete(message.id);
+					}, 900000),
+					execute: this.bot.utils.paginateEmbeds
+				});
+				["⬅️", "➡️", "⏹️"].forEach(r => message.react(r));
+			}
+		} else if(typeof result == "object") {
+			if(result.embed || result.title)
+				await msg.channel.send({embeds: [result.embed ?? result]});
+			else await msg.channel.send(result);
+		}
+		else await msg.channel.send(result);
+	}
+
+	async handleMenu(reaction, user) {
+		if(user.bot) return;
+
+		var msg;
+		if(reaction.message.partial) {
+			try {
+				msg = await reaction.message.fetch();
+			} catch(e) {
+				if(e.message.includes('Unknown')) return;
+				else return Promise.reject(e);
+			}
+		} else msg = reaction.message;
+
+		var config;
+		if(msg.channel.guild) config = await this.bot.stores.configs.get(msg.channel.guild.id);
+		else config = undefined;
+
+		var menu = this.menus.get(msg.id);
+		if(!menu) return;
+		if(menu.user == user.id) {
+			try {
+				await menu.execute(bot, msg, reaction, user, config);
+			} catch(e) {
+				console.log(e);
+				bot.writeLog(e);
+				await msg.channel.send("ERR! "+e.message);
+			}
+		}
 	}
 
 	checkPerms(ctx, cfg) {
