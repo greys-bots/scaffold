@@ -6,7 +6,7 @@ const {
 } = require('../extras.js');
 
 module.exports = {
-	genEmbeds: async (bot, arr, genFunc, info = {}, fieldnum, extras = {}) => {
+	async genEmbeds(bot, arr, genFunc, info = {}, fieldnum, extras = {}) {
 		return new Promise(async res => {
 			var embeds = [];
 			var current = { embed: {
@@ -52,7 +52,7 @@ module.exports = {
 			res(embeds);
 		})
 	},
-	paginateEmbeds: async function(bot, m, reaction) {
+	async paginateEmbeds(bot, m, reaction) {
 		switch(reaction.emoji.name) {
 			case "⬅️":
 				if(this.index == 0) {
@@ -62,7 +62,7 @@ module.exports = {
 				}
 				await m.edit({embeds: [this.data[this.index].embed ?? this.data[this.index]]});
 				if(m.channel.type != "DM") await reaction.users.remove(this.user)
-				bot.menus[m.id] = this;
+				return this;
 				break;
 			case "➡️":
 				if(this.index == this.data.length-1) {
@@ -72,16 +72,17 @@ module.exports = {
 				}
 				await m.edit({embeds: [this.data[this.index].embed ?? this.data[this.index]]});
 				if(m.channel.type != "DM") await reaction.users.remove(this.user)
-				bot.menus[m.id] = this;
+				return this;
 				break;
 			case "⏹️":
 				await m.delete();
 				delete bot.menus[m.id];
+				return undefined;
 				break;
 		}
 	},
 
-	getConfirmation: async (bot, msg, user) => {
+	async getConfirmation(bot, msg, user) {
 		return new Promise(res => {
 
 			function msgListener(message) {
@@ -170,7 +171,7 @@ module.exports = {
 			bot.on('interactionCreate', intListener)
 		})
 	},
-	awaitMessage: async (bot, msg, user, time) => {
+	async awaitMessage(bot, msg, user, time) {
 		return new Promise(res => {
 			function msgListener(message) {
 				if(message.channel.id != msg.channel.id ||
@@ -190,7 +191,7 @@ module.exports = {
 		})
 	},
 
-	awaitSelection: async (ctx, choices, msg, options = {min_values: 1, max_values: 1, placeholder: '- - -'}) => {
+	async awaitSelection(ctx, choices, msg, options = {min_values: 1, max_values: 1, placeholder: '- - -'}) {
 		var components = [{
 			type: 3,
 			custom_id: 'selector',

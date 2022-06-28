@@ -12,6 +12,10 @@ class CommandHandler {
 			this.load(path);
 			console.log('Commands loaded.');
 		})
+
+		this.bot.on('messageReactionAdd', (reaction, user) => {
+			this.handleMenu(reaction, user);
+		})
 	}
 
 	load(path) {
@@ -149,10 +153,10 @@ class CommandHandler {
 		if(!menu) return;
 		if(menu.user == user.id) {
 			try {
-				await menu.execute(bot, msg, reaction, user, config);
+				await menu.execute(this.bot, msg, reaction, user, config);
 			} catch(e) {
 				console.log(e);
-				bot.writeLog(e);
+				this.bot.writeLog(e);
 				await msg.channel.send("ERR! "+e.message);
 			}
 		}
