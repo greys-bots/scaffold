@@ -40,7 +40,7 @@ module.exports = async (bot, path) => {
 		if(!file.endsWith('.js')) continue;
 		var name = file.replace(/\.js/i, "");
 		stores[name] = require(path+'/'+file)(bot, db);
-		if(stores[name].init) stores[name].init();
+		if(stores[name].init) await stores[name].init();
 	}
 
 	try {
