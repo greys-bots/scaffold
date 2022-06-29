@@ -156,7 +156,6 @@ class CommandHandler {
 				await menu.execute(this.bot, msg, reaction, user, config);
 			} catch(e) {
 				console.log(e);
-				this.bot.writeLog(e);
 				await msg.channel.send("ERR! "+e.message);
 			}
 		}
