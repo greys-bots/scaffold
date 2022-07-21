@@ -176,7 +176,7 @@ class InteractionHandler {
 		if(!cmd) return;
 
 		var cfg;
-		if(ctx.guild) cfg = await ctx.client.stores.configs.get(ctx.guild.id);
+		if(ctx.guild && ctx.client.stores?.configs) cfg = await ctx.client.stores.configs.get(ctx.guild.id);
 
 		var check = this.checkPerms(cmd, ctx, cfg);
 		if(!check) return await ctx.reply({

@@ -146,7 +146,7 @@ class CommandHandler {
 		} else msg = reaction.message;
 
 		var config;
-		if(msg.channel.guild) config = await this.bot.stores.configs.get(msg.channel.guild.id);
+		if(msg.channel.guild && this.bot.stores?.configs) config = await this.bot.stores.configs.get(msg.channel.guild.id);
 		else config = undefined;
 
 		var menu = this.menus.get(msg.id);
