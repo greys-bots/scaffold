@@ -17,6 +17,16 @@ class DataObject {
 		return rest;
 	}
 
+	toJSON() {
+		var {
+			store,
+			KEYS,
+			...rest
+		} = this;
+
+		return rest;
+	}
+
 	async fetch() {
 		var data = await this.store.getID(this.id);
 		for(var k in this.KEYS)
