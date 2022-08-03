@@ -44,6 +44,7 @@ class SlashCommand {
 
 		if(this.guildOnly)
 			data.dm_permission = false;
+		data.default_permission = true;
 		// if(this.permissions?.length)
 			// data.default_member_permissions = '0';
 		if(!data.options) data.options = [];
