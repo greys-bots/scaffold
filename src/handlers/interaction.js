@@ -1,9 +1,15 @@
-const { Collection } = require('discord.js');
+const {
+	Collection
+} = require('discord.js');
 const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const {
+	Routes,
+	InteractionType,
+	ComponentType
+} = require('discord-api-types/v10');
 const { pageBtns: PAGE } = require('../extras');
 
-const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 class InteractionHandler {
 	menus = new Collection();
@@ -140,10 +146,17 @@ class InteractionHandler {
 	}
 
 	async handle(ctx) {
-		if(ctx.isAutocomplete()) this.handleAuto(ctx);
-		if(ctx.isCommand() || ctx.isContextMenu()) this.handleCommand(ctx);
-		if(ctx.isButton()) this.handleButtons(ctx);
-		if(ctx.isSelectMenu()) this.handleSelect(ctx);
+		console.log(ctx.type, InteractionType)
+		if(ctx.type == InteractionType.ApplicationCommandAutocomplete)
+			this.handleAuto(ctx);
+		if(ctx.type == InteractionType.ApplicationCommand)
+			this.handleCommand(ctx);
+		if(ctx.type == InteractionType.MessageComponent) {
+			if(ctx.componentType == ComponentType.Button)
+				this.handleButtons(ctx);
+			if(ctx.componentType == ComponentType.SelectMenu)
+				this.handleSelect(ctx);
+		} 
 	}
 
 	parse(ctx) {
@@ -173,6 +186,7 @@ class InteractionHandler {
 
 	async handleCommand(ctx) {
 		var cmd = this.parse(ctx);
+		console.log(cmd)
 		if(!cmd) return;
 
 		var cfg;

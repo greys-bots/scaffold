@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js');
+const { Client } = require('discord.js');
 
 class FrameClient extends Client {
 	prefix = 'bot!';
