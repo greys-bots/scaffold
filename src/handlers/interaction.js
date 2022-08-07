@@ -146,7 +146,6 @@ class InteractionHandler {
 	}
 
 	async handle(ctx) {
-		console.log(ctx.type, InteractionType)
 		if(ctx.type == InteractionType.ApplicationCommandAutocomplete)
 			this.handleAuto(ctx);
 		if(ctx.type == InteractionType.ApplicationCommand)
@@ -186,7 +185,6 @@ class InteractionHandler {
 
 	async handleCommand(ctx) {
 		var cmd = this.parse(ctx);
-		console.log(cmd)
 		if(!cmd) return;
 
 		var cfg;
