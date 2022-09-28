@@ -99,7 +99,7 @@ module.exports = {
 						components: [{
 							type: 1,
 							components: msg.components[0].components.map(b => ({
-								...b,
+								...b.data,
 								disabled: true
 							}))
 						}]
@@ -124,7 +124,7 @@ module.exports = {
 						components: [{
 							type: 1,
 							components: msg.components[0].components.map(b => ({
-								...b,
+								...b.data,
 								disabled: true
 							}))
 						}]
@@ -149,7 +149,7 @@ module.exports = {
 					components: [{
 						type: 1,
 						components: intr.message.components[0].components.map(b => ({
-							...b,
+							...b.data,
 							disabled: true
 						}))
 					}]
