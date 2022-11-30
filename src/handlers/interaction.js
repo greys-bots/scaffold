@@ -203,7 +203,11 @@ class InteractionHandler {
 		try {
 			var res = await cmd.execute(ctx);
 		} catch(e) {
-			console.error(e);
+			console.error({
+				command: cmd.name ?? cmd.data.name,
+				user: `${ctx.user.tag} (${ctx.user.id})`,
+				server: ctx.guild?.id ?? 'DMs'
+			}, e);
 			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + e.message, ephemeral: true});
 			else return await ctx.reply({content: "Error:\n" + e.message, ephemeral: true});
 		}
