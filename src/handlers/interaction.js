@@ -65,16 +65,21 @@ class InteractionHandler {
 						// no group data? we need to create it
 						var mod;
 						delete require.cache[require.resolve(this.commandPath + `/${mods.slice(0, i + 1).join("/")}/__mod.js`)];
-						mod = require(this.commandPath + `/${mods.slice(0, i + 1).join("/")}/__mod.js`)(this.bot, this.bot.store);
+						var ms = mods.slice(0, i + 1);
+						mod = require(this.commandPath + `/${ms.join("/")}/__mod.js`)(this.bot, this.bot.store);
 						group = mod;
 						group.type = group.type ?? 1;
 
 						if(!curmod) {
 							// start of loop again, also means we can
 							// safely set this as a top-level command in our collections
+							group.fullName = mod.name;
+							slashNames.push(group.fullName);
 							slashCommands.set(mod.name, group);
 						} else {
 							// otherwise it belongs nested below the current module data
+							group.fullName = ms.join(" ");
+							slashNames.push(group.fullName);
 							curmod.addSubcommand(group);
 						}
 					}
