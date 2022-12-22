@@ -8,6 +8,7 @@ const {
 	ComponentType
 } = require('discord-api-types/v10');
 const { pageBtns: PAGE } = require('../extras');
+const axios = require('axios');
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
@@ -203,9 +204,34 @@ class InteractionHandler {
 		try {
 			var res = await cmd.execute(ctx);
 		} catch(e) {
-			console.error(e);
-			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + e.message, ephemeral: true});
-			else return await ctx.reply({content: "Error:\n" + e.message, ephemeral: true});
+			var eobj = {
+				guild: ctx.guild ? `${ctx.guild.name} (${ctx.guild.id})` : 'DMs',
+				user: `${ctx.user.tag} (${ctx.user.id})`,
+				command: cmd.name
+			}
+			console.error(eobj, e.message ?? e);
+			if(process.env.ERROR_HOOK) await axios.post(process.env.ERROR_HOOK, {
+				embeds: [{
+					title: 'Error',
+					description: (e.message ?? e).slice(0, 4000),
+					fields: [
+						{
+							name: 'Guild',
+							value: eobj.guild
+						},
+						{
+							name: 'User',
+							value: eobj.user
+						},
+						{
+							name: 'Command',
+							value: cmd.name
+						}
+					]
+				}]
+			})
+			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + (e.message ?? e), ephemeral: true});
+			else return await ctx.reply({content: "Error:\n" + (e.message ?? e), ephemeral: true});
 		}
 
 		if(!res) return;
