@@ -33,6 +33,7 @@ class InteractionHandler {
 		var slashCommands = new Collection(); // actual commands, with execute data
 		var slashData = new Collection(); // just what gets sent to discord
 		var devOnly = new Collection(); // slashData: dev edition
+		var slashNames = []; // for help parsing help stuff later
 
 		var files = this.bot.utils.recursivelyReadDirectory(this.commandPath);
 
@@ -87,16 +88,22 @@ class InteractionHandler {
 				command.permissions = command.permissions ?? curmod.permissions;
 				command.opPerms = command.opPerms ?? curmod.opPerms;
 				command.guildOnly = command.guildOnly ?? curmod.guildOnly;
+				command.fullName = mods.join(' ') + ` ${command.name}`;
+				slashNames.push(command.fullName);
 
 				curmod.addSubcommand(command) // nest the command
 			} else {
 				// no mods? just make it top-level
+				command.fullName = command.name;
+				slashNames.push(command.fullName);
+				
 				slashCommands.set(command.name, command);
 			}
 		}
 
 		this.bot.slashCommands = slashCommands; // for safe keeping
 		slashData = slashCommands.map(s => s.transform());
+		this.bot.slashNames = slashNames;
 
 		// all of below is just sending it off to discord
 		try {
