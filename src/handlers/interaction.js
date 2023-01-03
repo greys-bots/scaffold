@@ -213,13 +213,17 @@ class InteractionHandler {
 			ephemeral: true
 		})
 		
+		var time = new Date();
+		var success = true;
 		try {
 			var res = await cmd.execute(ctx);
 		} catch(e) {
+			success = false;
 			var eobj = {
 				guild: ctx.guild ? `${ctx.guild.name} (${ctx.guild.id})` : 'DMs',
 				user: `${ctx.user.tag} (${ctx.user.id})`,
-				command: cmd.name
+				command: cmd.name,
+				time
 			}
 			console.error(eobj, e.message ?? e);
 			if(process.env.ERROR_HOOK) await axios.post(process.env.ERROR_HOOK, {
@@ -239,13 +243,20 @@ class InteractionHandler {
 							name: 'Command',
 							value: cmd.name
 						}
-					]
+					],
+					footer: { timestamp: time }
 				}]
 			})
 			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + (e.message ?? e), ephemeral: true});
 			else return await ctx.reply({content: "Error:\n" + (e.message ?? e), ephemeral: true});
 		}
 
+		await this.bot.db.query(`INSERT INTO analytics (command, type, time, success) VALUES ($1, $2, $3, $4)`, [
+			cmd.fullName,
+			1, // for slash command
+			time,
+			success
+		])
 		if(!res) return;
 
 		var type;

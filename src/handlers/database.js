@@ -11,6 +11,14 @@ module.exports = async (bot, path) => {
 			val 	TEXT
 		);
 
+		CREATE TABLE IF NOT EXISTS analytics (
+			id SERIAL PRIMARY KEY,
+			command	TEXT,
+			type INTEGER,
+			time TIMESTAMP,
+			success BOOL
+		);
+
 		CREATE OR REPLACE FUNCTION gen_hid() RETURNS TEXT AS
 			'select lower(substr(md5(random()::text), 0, 5));'
 		LANGUAGE SQL VOLATILE;

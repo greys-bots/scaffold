@@ -28,18 +28,18 @@ class CommandHandler {
 
 		for(var f of files) {
 			var path_frags = f.replace(path, "").split(/(?:\\|\/)/);
-			var mod = path_frags.length > 1 ? path_frags[path_frags.length - 2] : "Unsorted";
+			var modn = path_frags.length > 1 ? path_frags[path_frags.length - 2] : "Unsorted";
 			var file = path_frags[path_frags.length - 1];
-			if(!modules.get(mod.toLowerCase())) {
+			if(!modules.get(modn.toLowerCase())) {
 				delete require.cache[require.resolve(f.replace(file, "/__mod.js"))];
 				var mod_info = require(file == "__mod.js" ? f : f.replace(file, "__mod.js"));
-				modules.set(mod.toLowerCase(), {...mod_info, name: mod, commands: new Collection()})
-				mod_aliases.set(mod.toLowerCase(), mod.toLowerCase());
-				if(mod_info.alias) mod_info.alias.forEach(a => mod_aliases.set(a, mod.toLowerCase()));
+				modules.set(modn.toLowerCase(), {...mod_info, name: modn, commands: new Collection()})
+				mod_aliases.set(modn.toLowerCase(), modn.toLowerCase());
+				if(mod_info.alias) mod_info.alias.forEach(a => mod_aliases.set(a, modn.toLowerCase()));
 			}
 			if(file == "__mod.js") continue;
 
-			mod = modules.get(mod.toLowerCase());
+			var mod = modules.get(modn.toLowerCase());
 			if(!mod) {
 				console.log("Whoopsies");
 				continue;
@@ -47,6 +47,7 @@ class CommandHandler {
 
 			delete require.cache[require.resolve(f)];
 			var command = require(f)(this.bot, this.bot.stores, mod);
+			command.fullName = `${modn} ${command.name}`;
 			commands.set(command.name, command);
 			mod.commands.set(command.name, command);
 			aliases.set(command.name, command.name);
@@ -92,11 +93,21 @@ class CommandHandler {
 			return;
 		}
 
+		var time = new Date();
+		var success = true;
 		try {
 			var result = await command.execute({bot: this.bot, msg, args});
 		} catch(e) {
+
 			return Promise.reject(e);
 		}
+
+		await this.bot.db.query(`INSERT INTO analytics (command, type, time, success) VALUES ($1, $2, $3, $4)`, [
+			command.fullName,
+			0, // for text command
+			time,
+			success
+		])
 
 		if(command.cooldown) {
 			this.cooldowns.set(`${msg.author.id}-${command.name}`, Date.now() + (command.cooldown * 1000));
