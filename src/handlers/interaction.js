@@ -18,7 +18,7 @@ class InteractionHandler {
 	constructor(bot, path, sharded) {
 		this.bot = bot;
 		this.commandPath = path;
-		this.sharded = sharded ?? false;
+		this.sharded = sharded ?? !!bot.shard ?? false;
 
 		bot.on('interactionCreate', (interaction) => {
 			this.handle(interaction);
