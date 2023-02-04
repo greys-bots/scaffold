@@ -15,9 +15,10 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 class InteractionHandler {
 	menus = new Collection();
 
-	constructor(bot, path) {
+	constructor(bot, path, sharded) {
 		this.bot = bot;
 		this.commandPath = path;
+		this.sharded = sharded ?? false;
 
 		bot.on('interactionCreate', (interaction) => {
 			this.handle(interaction);
@@ -112,6 +113,7 @@ class InteractionHandler {
 		this.bot.slashNames = slashNames;
 
 		// all of below is just sending it off to discord
+		if(this.sharded && !this.bot.shard.ids.includes[0]) return;
 		try {
 			if(!this.bot.application?.owner) await this.bot.application?.fetch();
 
@@ -222,7 +224,7 @@ class InteractionHandler {
 			var eobj = {
 				guild: ctx.guild ? `${ctx.guild.name} (${ctx.guild.id})` : 'DMs',
 				user: `${ctx.user.tag} (${ctx.user.id})`,
-				command: cmd.name,
+				command: cmd.fullName,
 				time
 			}
 			console.error(eobj, e.message ?? e);
