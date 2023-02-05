@@ -13,7 +13,13 @@ class FrameClient extends Client {
 		this.status = 0;
 
 		if(this.statuses?.length) {
-			this.on('ready', () => this.handleStatus());
+			if(!this.shard) {
+				this.on('ready', () => this.handleStatus());
+			} else if(this.shard && this.shard.ids.includes(this.shard.count - 1)) {
+				this.on('ready', () => {
+					this.shard.broadcastEval(cli => cli.handleStatus())
+				});
+			}
 		}
 	}
 
