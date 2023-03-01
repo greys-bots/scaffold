@@ -14,7 +14,7 @@ class SlashCommand {
 
 	usage = [];
 	guildOnly = false;
-	permissions = [];
+	permissions = null; // otherwise, this doesn't get inherited properly
 	ephemeral = false;
 	module;
 
