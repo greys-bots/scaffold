@@ -246,7 +246,11 @@ class InteractionHandler {
 							value: cmd.name
 						}
 					],
-					footer: { timestamp: time }
+					footer: { timestamp: time },
+					author: {
+						name: this.bot.user.tag,
+						icon_url: this.bot.user.avatarURL()
+					}
 				}]
 			})
 			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + (e.message ?? e), ephemeral: true});
@@ -332,7 +336,7 @@ class InteractionHandler {
 		return await ctx.respond(result ?? []);
 	}
 
-	checkPerms(cmd, ctx, cfg) {
+	checkPerms(cmd, ctx, cfg, usages) {
 		if(cmd.ownerOnly && ctx.user.id !== process.env.OWNER)
 			return false;
 		if(cmd.guildOnly && !ctx.member) return false; // pre-emptive in case of dm slash cmds
@@ -345,6 +349,23 @@ class InteractionHandler {
 		if(found && cmd.opPerms){			
 			return (cmd.opPerms.filter(p => found.perms.includes(p))
 					.length == cmd.opPerms.length);
+		}
+
+		switch(usages?.type) {
+			case 1:
+				if(!usages.whitelist?.length) return true;
+				found = cfg.whitelist?.includes(ctx.user.id);
+				if(!found) found = cfg.whitelist?.find(r => ctx.member.roles.resolve(r));
+				if(found) return true;
+				break;
+			case 2:
+				if(!usages.blacklist?.length) return true;
+				found = cfg.blacklist?.includes(ctx.user.id);
+				if(!found) found = cfg.blacklist?.find(r => ctx.member.roles.resolve(r));
+				if(!found) return true;
+				break;
+			default:
+				return true;
 		}
 
 		return false;
