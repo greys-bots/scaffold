@@ -342,7 +342,9 @@ class InteractionHandler {
 	checkPerms(cmd, ctx, cfg, usages) {
 		if(cmd.ownerOnly && ctx.user.id !== process.env.OWNER)
 			return false;
-		if(cmd.guildOnly && !ctx.member) return false; // pre-emptive in case of dm slash cmds
+		if(!cmd.guildOnly) return true;
+		if(!ctx.member) return false; // pre-emptive in case of dm slash cmds
+		if(ctx.member.permissions.has('Administrator')) return true;
 
 		var found;
 		if(ctx.guild && usages) {
