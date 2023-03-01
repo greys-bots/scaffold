@@ -13,9 +13,9 @@ class SlashCommand {
 	options = [];
 
 	usage = [];
-	guildOnly = false;
+	guildOnly = null;
 	permissions = null; // otherwise, this doesn't get inherited properly
-	ephemeral = false;
+	ephemeral = null;
 	module;
 
 	subcommands = new Collection();
