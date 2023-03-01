@@ -351,21 +351,23 @@ class InteractionHandler {
 					.length == cmd.opPerms.length);
 		}
 
-		switch(usages?.type) {
-			case 1:
-				if(!usages.whitelist?.length) return true;
-				found = cfg.whitelist?.includes(ctx.user.id);
-				if(!found) found = cfg.whitelist?.find(r => ctx.member.roles.resolve(r));
-				if(found) return true;
-				break;
-			case 2:
-				if(!usages.blacklist?.length) return true;
-				found = cfg.blacklist?.includes(ctx.user.id);
-				if(!found) found = cfg.blacklist?.find(r => ctx.member.roles.resolve(r));
-				if(!found) return true;
-				break;
-			default:
-				return true;
+		if(usages) {
+			switch(usages?.type) {
+				case 1:
+					if(!usages.whitelist?.length) return true;
+					found = cfg.whitelist?.includes(ctx.user.id);
+					if(!found) found = cfg.whitelist?.find(r => ctx.member.roles.resolve(r));
+					if(found) return true;
+					break;
+				case 2:
+					if(!usages.blacklist?.length) return true;
+					found = cfg.blacklist?.includes(ctx.user.id);
+					if(!found) found = cfg.blacklist?.find(r => ctx.member.roles.resolve(r));
+					if(!found) return true;
+					break;
+				default:
+					return true;
+			}
 		}
 
 		return false;
