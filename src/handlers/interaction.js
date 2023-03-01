@@ -253,7 +253,7 @@ class InteractionHandler {
 						name: this.bot.user.tag,
 						icon_url: this.bot.user.avatarURL()
 					},
-					color: 0xaa0000
+					color: 0xaa5555
 				}]
 			})
 			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + (e.message ?? e), ephemeral: true});
