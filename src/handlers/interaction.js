@@ -245,7 +245,7 @@ class InteractionHandler {
 						},
 						{
 							name: 'Command',
-							value: cmd.name
+							value: cmd.fullName
 						}
 					],
 					footer: { timestamp: time },
