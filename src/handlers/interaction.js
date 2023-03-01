@@ -98,6 +98,8 @@ class InteractionHandler {
 				command.fullName = mods.join(' ') + ` ${command.name}`;
 				slashNames.push(command.fullName);
 
+				console.log(command.fullName, command.permissions, command.guildOnly)
+
 				curmod.addSubcommand(command) // nest the command
 			} else {
 				// no mods? just make it top-level
@@ -363,8 +365,6 @@ class InteractionHandler {
 						if(found) return false;
 					}
 					break;
-				default:
-					return true;
 			}
 		}
 
