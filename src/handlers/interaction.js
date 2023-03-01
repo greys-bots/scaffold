@@ -203,9 +203,11 @@ class InteractionHandler {
 		if(!cmd) return;
 
 		var cfg;
+		var usages;
 		if(ctx.guild && ctx.client.stores?.configs) cfg = await ctx.client.stores.configs.get(ctx.guild.id);
+		if(ctx.guild && ctx.client.stores?.usages) usages = await ctx.client.stores.usages.get(ctx.guild.id);
 
-		var check = this.checkPerms(cmd, ctx, cfg);
+		var check = this.checkPerms(cmd, ctx, cfg, usages);
 		if(!check) return await ctx.reply({
 			content: "You don't have permission to use this command!",
 			ephemeral: true
@@ -250,7 +252,8 @@ class InteractionHandler {
 					author: {
 						name: this.bot.user.tag,
 						icon_url: this.bot.user.avatarURL()
-					}
+					},
+					color: 0xaa0000
 				}]
 			})
 			if(ctx.replied) return await ctx.followUp({content: "Error:\n" + (e.message ?? e), ephemeral: true});
@@ -341,33 +344,36 @@ class InteractionHandler {
 			return false;
 		if(cmd.guildOnly && !ctx.member) return false; // pre-emptive in case of dm slash cmds
 
-		if(!cmd.permissions?.length) return true; // no perms also means no opPerms
-		if(ctx.member.permissions.has(cmd.permissions))
-			return true;
-
-		var found = this.findOpped(ctx.member ?? ctx.user, cfg?.opped)
-		if(found && cmd.opPerms){			
-			return (cmd.opPerms.filter(p => found.perms.includes(p))
-					.length == cmd.opPerms.length);
-		}
-
-		if(usages) {
+		var found;
+		if(ctx.guild && usages) {
 			switch(usages?.type) {
 				case 1:
-					if(!usages.whitelist?.length) return true;
-					found = cfg.whitelist?.includes(ctx.user.id);
-					if(!found) found = cfg.whitelist?.find(r => ctx.member.roles.resolve(r));
-					if(found) return true;
+					if(usages.whitelist?.length) {
+						found = usages.whitelist.includes(ctx.user.id);
+						if(!found) found = usages.whitelist.find(r => ctx.member.roles.resolve(r));
+						if(found) return true;
+					}
 					break;
 				case 2:
-					if(!usages.blacklist?.length) return true;
-					found = cfg.blacklist?.includes(ctx.user.id);
-					if(!found) found = cfg.blacklist?.find(r => ctx.member.roles.resolve(r));
-					if(!found) return true;
+					if(usages.blacklist?.length) {
+						found = usages.blacklist.includes(ctx.user.id);
+						if(!found) found = usages.blacklist.find(r => ctx.member.roles.resolve(r));
+						if(found) return false;
+					}
 					break;
 				default:
 					return true;
 			}
+		}
+
+		if(!cmd.permissions?.length) return true;
+		if(cmd.permissions.length && ctx.member.permissions.has(cmd.permissions))
+			return true;
+
+		found = this.findOpped(ctx.member ?? ctx.user, cfg?.opped)
+		if(found && cmd.opPerms){			
+			return (cmd.opPerms.filter(p => found.perms.includes(p))
+					.length == cmd.opPerms.length);
 		}
 
 		return false;
