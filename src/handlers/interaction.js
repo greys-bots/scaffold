@@ -355,7 +355,7 @@ class InteractionHandler {
 					if(usages.whitelist?.length) {
 						found = usages.whitelist.includes(ctx.user.id);
 						if(!found) found = usages.whitelist.find(r => ctx.member.roles.resolve(r));
-						if(found) return true;
+						if(!found) return false;
 					}
 					break;
 				case 2:
@@ -364,6 +364,8 @@ class InteractionHandler {
 						if(!found) found = usages.blacklist.find(r => ctx.member.roles.resolve(r));
 						if(found) return false;
 					}
+					break;
+				default:
 					break;
 			}
 		}
