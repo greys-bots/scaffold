@@ -191,7 +191,7 @@ module.exports = {
 		})
 	},
 
-	async awaitSelection(ctx, choices, msg, options = {min_values: 1, max_values: 1, placeholder: '- - -'}) {
+	async awaitSelection(ctx, choices, msg, options = {min_values: 1, max_values: 1, placeholder: '- - -'}, ephemeral) {
 		var components = [{
 			type: 3,
 			custom_id: 'selector',
@@ -206,7 +206,8 @@ module.exports = {
 				components: [{
 					type: 1,
 					components
-				}]
+				}],
+				ephemeral
 			});
 		} else {
 			reply = await ctx.reply({
@@ -215,7 +216,8 @@ module.exports = {
 					type: 1,
 					components
 				}],
-				fetchReply: true
+				fetchReply: true,
+				ephemeral
 			});
 		}
 
