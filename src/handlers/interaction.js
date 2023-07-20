@@ -262,12 +262,14 @@ class InteractionHandler {
 			else return await ctx.reply({content: "Error:\n" + (e.message ?? e), ephemeral: true});
 		}
 
-		await this.bot.db.query(`INSERT INTO analytics (command, type, time, success) VALUES ($1, $2, $3, $4)`, [
-			cmd.fullName,
-			1, // for slash command
-			time,
-			success
-		])
+		if(this.bot.db) {
+			await this.bot.db.query(`INSERT INTO analytics (command, type, time, success) VALUES ($1, $2, $3, $4)`, [
+				cmd.fullName,
+				1, // for slash command
+				time,
+				success
+			])
+		}
 		if(!res) return;
 
 		var type;
