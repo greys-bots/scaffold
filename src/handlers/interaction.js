@@ -20,8 +20,6 @@ class InteractionHandler {
 		this.commandPath = path;
 		if(typeof sharded == "boolean") this.sharded = sharded;
 		else this.sharded = !!bot.shard ?? false;
-		console.log("Sharding status: ", this.sharded);
-		console.log("Shard(s): ", this.bot.shard.ids);
 
 		bot.on('interactionCreate', (interaction) => {
 			this.handle(interaction);
@@ -116,14 +114,8 @@ class InteractionHandler {
 		this.bot.slashNames = slashNames;
 
 		// all of below is just sending it off to discord
-		console.log("Update debug: ", {
-			sharded: this.sharded,
-			bot_shards: this.bot.shard.ids,
-			included: this.bot.shard.ids.includes[0]
-		})
-		if(this.sharded && !this.bot.shard.ids.includes[0]) return;
+		if(this.sharded && !this.bot.shard.ids.includes(0)) return;
 		try {
-			console.log("Sending off app commands...");
 			if(!this.bot.application?.owner) await this.bot.application?.fetch();
 
 			var cmds = slashData.map(d => d);
