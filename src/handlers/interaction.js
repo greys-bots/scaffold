@@ -373,7 +373,7 @@ class InteractionHandler {
 			}
 		}
 
-		if(cfg.disabled?.length) {
+		if(cfg?.disabled?.length) {
 			if(cfg.disabled.includes(cmd.fullName)) return false;
 		}
 
