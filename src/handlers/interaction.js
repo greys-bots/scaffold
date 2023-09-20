@@ -99,8 +99,6 @@ class InteractionHandler {
 				command.fullName = mods.join(' ') + ` ${command.name}`;
 				slashNames.push(command.fullName);
 
-				console.log(command.fullName, command.permissions, command.guildOnly)
-
 				curmod.addSubcommand(command) // nest the command
 			} else {
 				// no mods? just make it top-level
@@ -118,6 +116,7 @@ class InteractionHandler {
 		// all of below is just sending it off to discord
 		if(this.sharded && !this.bot.shard.ids.includes[0]) return;
 		try {
+			console.log("Sending off app commands...");
 			if(!this.bot.application?.owner) await this.bot.application?.fetch();
 
 			var cmds = slashData.map(d => d);
@@ -156,6 +155,7 @@ class InteractionHandler {
 					{ body: dcmds },
 				);
 			}
+			console.log("App commands were sent!");
 			return;
 		} catch(e) {
 			console.log(e);
