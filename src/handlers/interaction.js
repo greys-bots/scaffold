@@ -21,7 +21,7 @@ class InteractionHandler {
 		if(typeof sharded == "boolean") this.sharded = sharded;
 		else this.sharded = !!bot.shard ?? false;
 		console.log("Sharding status: ", this.sharded);
-		console.log("Shard(s): ", this.bot.shard);
+		console.log("Shard(s): ", this.bot.shard.ids);
 
 		bot.on('interactionCreate', (interaction) => {
 			this.handle(interaction);
