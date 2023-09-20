@@ -373,6 +373,10 @@ class InteractionHandler {
 			}
 		}
 
+		if(cfg.disabled?.length) {
+			if(cfg.disabled.includes(cmd.fullName)) return false;
+		}
+
 		if(!cmd.permissions?.length) return true;
 		if(cmd.permissions.length && ctx.member.permissions.has(cmd.permissions))
 			return true;
