@@ -116,6 +116,11 @@ class InteractionHandler {
 		this.bot.slashNames = slashNames;
 
 		// all of below is just sending it off to discord
+		console.log("Update debug: ", {
+			sharded: this.sharded
+			bot_shards: this.bot.shard.ids,
+			included: this.bot.shard.ids.includes[0]
+		})
 		if(this.sharded && !this.bot.shard.ids.includes[0]) return;
 		try {
 			console.log("Sending off app commands...");
