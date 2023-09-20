@@ -117,7 +117,7 @@ class InteractionHandler {
 
 		// all of below is just sending it off to discord
 		console.log("Update debug: ", {
-			sharded: this.sharded
+			sharded: this.sharded,
 			bot_shards: this.bot.shard.ids,
 			included: this.bot.shard.ids.includes[0]
 		})
