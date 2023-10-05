@@ -4,6 +4,7 @@ const { Pool } = require('pg');
 module.exports = async (bot, path) => {
 	const db = new Pool();
 
+	// ty pluralkit for the hid generator <3
 	await db.query(`
 		CREATE TABLE IF NOT EXISTS extras (
 			id 		SERIAL PRIMARY KEY,
@@ -19,9 +20,9 @@ module.exports = async (bot, path) => {
 			success BOOL
 		);
 
-		CREATE OR REPLACE FUNCTION gen_hid() RETURNS TEXT AS
-			'select lower(substr(md5(random()::text), 0, 6));'
-		LANGUAGE SQL VOLATILE;
+		CREATE OR REPLACE FUNCTION gen_hid() RETURNS TEXT AS $$
+			select string_agg(substr('abcdefghijklmnopqrstuvwxyz'0123456789, ceil(random() * 36)::integer, 1), '') from generate_series(1, 5)
+		$$ LANGUAGE SQL VOLATILE;
 
 		CREATE OR REPLACE FUNCTION find_unique(_tbl regclass) RETURNS TEXT AS $$
 			DECLARE nhid TEXT;
