@@ -20,7 +20,7 @@ module.exports = async (bot, path) => {
 		);
 
 		CREATE OR REPLACE FUNCTION gen_hid() RETURNS TEXT AS
-			'select lower(substr(md5(random()::text), 0, 5));'
+			'select lower(substr(md5(random()::text), 0, 6));'
 		LANGUAGE SQL VOLATILE;
 
 		CREATE OR REPLACE FUNCTION find_unique(_tbl regclass) RETURNS TEXT AS $$
