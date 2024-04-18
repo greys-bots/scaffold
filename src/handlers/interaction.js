@@ -231,7 +231,7 @@ class InteractionHandler {
 				command: cmd.fullName,
 				time
 			}
-			console.error(eobj, e.message ?? e);
+			console.error(eobj, e.message ?? e, '\n', e.stack);
 			if(process.env.ERROR_HOOK) await axios.post(process.env.ERROR_HOOK, {
 				embeds: [{
 					title: 'Error',
