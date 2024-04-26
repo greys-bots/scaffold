@@ -12,6 +12,12 @@ const axios = require('axios');
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
+async sleep(ms) {
+	return new Promise(res => {
+		setTimeout(() => res(), ms ?? 1000)
+	})
+}
+
 class InteractionHandler {
 	menus = new Collection();
 	warnings = new Set();
@@ -224,7 +230,6 @@ class InteractionHandler {
 		var success = true;
 		try {
 			var res = await cmd.execute(ctx);
-			await this.handleWarning(ctx)
 		} catch(e) {
 			success = false;
 			var eobj = {
@@ -319,6 +324,8 @@ class InteractionHandler {
 
 				return await ctx[type]({...res, ephemeral: (res.ephemeral ?? cmd.ephemeral) ?? false})
 		}
+
+		await this.handleWarning(ctx);
 	}
 
 	async handleButtons(ctx) {
