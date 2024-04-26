@@ -224,10 +224,7 @@ class InteractionHandler {
 		var success = true;
 		try {
 			var res = await cmd.execute(ctx);
-			await this.handleWarning({
-				user: ctx.user,
-				channel: ctx.channel
-			})
+			await this.handleWarning(ctx)
 		} catch(e) {
 			success = false;
 			var eobj = {
@@ -443,7 +440,10 @@ class InteractionHandler {
 		if(this.warnings.has(ctx.user.id)) return;
 		this.warnings.add(ctx.user.id);
 		setTimeout(() => this.warnings.delete(ctx.user.id), 1000 * 60 * 60 * 6) // show warning again after 6 hours
-		await ctx.channel.send(this.bot.warning);
+		await ctx.followUp({
+			content: this.bot.warning,
+			ephemeral: true
+		});
 	}
 }
 
