@@ -173,7 +173,8 @@ class InteractionHandler {
 		if(ctx.type == InteractionType.ApplicationCommandAutocomplete)
 			this.handleAuto(ctx);
 		if(ctx.type == InteractionType.ApplicationCommand)
-			this.handleCommand(ctx);
+			await this.handleCommand(ctx);
+			await this.handleWarning(ctx);
 		if(ctx.type == InteractionType.MessageComponent) {
 			if(ctx.componentType == ComponentType.Button)
 				this.handleButtons(ctx);
@@ -324,8 +325,6 @@ class InteractionHandler {
 
 				return await ctx[type]({...res, ephemeral: (res.ephemeral ?? cmd.ephemeral) ?? false})
 		}
-
-		await this.handleWarning(ctx);
 	}
 
 	async handleButtons(ctx) {
@@ -447,7 +446,8 @@ class InteractionHandler {
 		if(this.warnings.has(ctx.user.id)) return;
 		this.warnings.add(ctx.user.id);
 		setTimeout(() => this.warnings.delete(ctx.user.id), 1000 * 60 * 60 * 6) // show warning again after 6 hours
-		await ctx.followUp({
+		var type = ctx.replied ? "followUp" : "reply";
+		await ctx[type]({
 			content: this.bot.warning,
 			ephemeral: true
 		});
