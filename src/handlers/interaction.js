@@ -12,7 +12,7 @@ const axios = require('axios');
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
-async sleep(ms) {
+async function sleep(ms) {
 	return new Promise(res => {
 		setTimeout(() => res(), ms ?? 1000)
 	})
