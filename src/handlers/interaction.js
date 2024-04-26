@@ -14,6 +14,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 class InteractionHandler {
 	menus = new Collection();
+	warnings = new Set();
 
 	constructor(bot, path, sharded) {
 		this.bot = bot;
@@ -223,6 +224,10 @@ class InteractionHandler {
 		var success = true;
 		try {
 			var res = await cmd.execute(ctx);
+			await this.handleWarning({
+				user: ctx.user,
+				channel: ctx.channel
+			})
 		} catch(e) {
 			success = false;
 			var eobj = {
@@ -431,6 +436,14 @@ class InteractionHandler {
 				components: PAGE(menu.index + 1, data.length)
 			}]
 		})
+	}
+
+	async handleWarning(ctx) {
+		if(!process.env.WARNING) return;
+		if(this.warnings.has(ctx.user.id)) return;
+		this.warnings.add(ctx.user.id);
+		setTimeout(() => this.warnings.delete(ctx.user.id), 1000 * 60 * 60 * 6) // show warning again after 6 hours
+		await ctx.channel.send(this.bot.warning);
 	}
 }
 
