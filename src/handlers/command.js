@@ -83,6 +83,8 @@ class CommandHandler {
 		var {command, args, msg, config: cfg} = ctx;
 		if(command.guildOnly && !msg.channel.guild) return "That command is guild only.";
 		if(msg.channel.guild) {
+			if(process.env.TESTING && msg.channel.guild.id !== process.env.TEST_GUILD)
+				return;
 			var check = this.checkPerms(ctx, cfg);
 			if(!check) return "You don't have permission to use that command.";
 		}

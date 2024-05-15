@@ -232,6 +232,9 @@ class InteractionHandler {
 			content: "That command is guild only!",
 			ephemeral: true
 		})
+
+		if(process.env.TESTING && ctx.guild.id !== process.env.TEST_GUILD)
+			return;
 		
 		var time = new Date();
 		var success = true;
