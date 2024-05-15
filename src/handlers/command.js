@@ -81,14 +81,14 @@ class CommandHandler {
 
 	async handle(ctx) {
 		var {command, args, msg, config: cfg} = ctx;
-		if(command.guildOnly && !msg.channel.guild) return "That command is guild only!";
+		if(command.guildOnly && !msg.channel.guild) return "That command is guild only.";
 		if(msg.channel.guild) {
 			var check = this.checkPerms(ctx, cfg);
-			if(!check) return "You don't have permission to use that command!";
+			if(!check) return "You don't have permission to use that command.";
 		}
 		if(command.cooldown && this.cooldowns.get(`${msg.author.id}-${command.name}`)) {
 			var s = Math.ceil((this.cooldowns.get(`${msg.author.id}-${command.name}`) - Date.now()) / 1000)
-			var m = await msg.channel.send(`Cool down time! Please wait **${s}s** before using this command`);
+			var m = await msg.channel.send(`This command is on cooldown. Please wait **${s}s** before using it again`);
 			setTimeout(() => m.delete(), s * 1000);
 			return;
 		}
@@ -174,6 +174,7 @@ class CommandHandler {
 
 	checkPerms(ctx, cfg) {
 		var {command: cmd, msg} = ctx;
+		if(cmd.devOnly && msg.user.id !== this.bot.owner) return false;
 		if(!cmd.permissions?.[0]) return true;
 		if(cmd.permissions && msg.member.permissions.has(cmd.permissions))
 			return true;

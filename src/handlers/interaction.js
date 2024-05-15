@@ -83,9 +83,15 @@ class InteractionHandler {
 						if(!curmod) {
 							// start of loop again, also means we can
 							// safely set this as a top-level command in our collections
-							group.fullName = mod.name;
-							slashNames.push(group.fullName);
-							slashCommands.set(mod.name, group);
+							if(group.dev) {
+								group.fullName = mod.name;
+								devOnly.set(mod.name, group);
+								slashCommands.set(mod.name, group);
+							} else {
+								group.fullName = mod.name;
+								slashNames.push(group.fullName);
+								slashCommands.set(mod.name, group);
+							}
 						} else {
 							// otherwise it belongs nested below the current module data
 							group.fullName = ms.join(" ");
@@ -117,7 +123,7 @@ class InteractionHandler {
 		}
 
 		this.bot.slashCommands = slashCommands; // for safe keeping
-		slashData = slashCommands.map(s => s.transform());
+		slashData = slashCommands.filter(x => !x.dev).map(s => s.transform());
 		this.bot.slashNames = slashNames;
 
 		// all of below is just sending it off to discord
@@ -126,7 +132,7 @@ class InteractionHandler {
 			if(!this.bot.application?.owner) await this.bot.application?.fetch();
 
 			var cmds = slashData.map(d => d);
-			var dcmds = devOnly.map(d => d);
+			var dcmds = devOnly.map(d => d.transform());
 			if(process.env.COMMAND_GUILD == process.env.DEV_GUILD) {
 				cmds = cmds.concat(dcmds);
 				await rest.put(
