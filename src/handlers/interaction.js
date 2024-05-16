@@ -233,7 +233,7 @@ class InteractionHandler {
 			ephemeral: true
 		})
 
-		if(process.env.TESTING && ctx.guild.id !== process.env.TEST_GUILD)
+		if(process.env.TESTING && ctx.guild?.id !== process.env.TEST_GUILD)
 			return;
 		
 		var time = new Date();
