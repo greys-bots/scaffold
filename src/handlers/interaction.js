@@ -451,7 +451,8 @@ class InteractionHandler {
 	}
 
 	async handleWarning(ctx) {
-		if(!process.env.WARNING) return;
+		if(!process.env.WARNING || process.env.WARNING == "") return;
+		if(!this.bot.warning || !this.bot.warning?.length) return;
 		if(this.warnings.has(ctx.user.id)) return;
 		this.warnings.add(ctx.user.id);
 		setTimeout(() => this.warnings.delete(ctx.user.id), 1000 * 60 * 60 * 6) // show warning again after 6 hours
