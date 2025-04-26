@@ -17,6 +17,7 @@ class SlashCommand {
 	permissions = null; // otherwise, this doesn't get inherited properly
 	ephemeral = null;
 	module;
+	v2 = false; // components v2
 
 	subcommands = new Collection();
 	

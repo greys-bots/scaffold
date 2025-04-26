@@ -298,20 +298,16 @@ class InteractionHandler {
 			case 'object':
 				if(Array.isArray(res)) {
 					var reply = {
-						embeds: [res[0]],
-						ephemeral: cmd.ephemeral ?? false
+						...res[0],
+						ephemeral: cmd.ephemeral ?? false,
+						flags: cmd.v2 ? ['IsComponentsV2'] : null
 					};
 					if(!res[1]) return await ctx[type](reply);
 
-					reply = {
-						...reply,
-						components: [
-							{
-								type: 1,
-								components: PAGE(1, res.length)
-							}
-						]
-					}
+					reply.components = (reply.components ?? []).concat([{
+						type: 1,
+						components: PAGE(1, res.length)
+					}])
 					await ctx[type](reply);
 					var message = await ctx.editReply(reply);
 
@@ -320,6 +316,7 @@ class InteractionHandler {
 						interaction: ctx,
 						data: res,
 						index: 0,
+						v2: cmd.v2 ?? false,
 						timeout: setTimeout(() => {
 							if(!this.menus.get(message.id)) return;
 							this.menus.delete(message.id);
@@ -441,13 +438,26 @@ class InteractionHandler {
 				break;
 		}
 
-		await ctx.update({
-			embeds: [data[menu.index]],
-			components: [{
-				type: 1,
-				components: PAGE(menu.index + 1, data.length)
-			}]
-		})
+		let payload;
+		if(menu.v2) {
+			payload = {
+				...data[menu.index],
+				components: (data[menu.index].components ?? []).concat({
+					type: 1,
+					components: PAGE(menu.index + 1, data.length)
+				})
+			};
+		} else {
+			payload = {
+				embeds: [data[menu.index]],
+				components: [{
+					type: 1,
+					components: PAGE(menu.index + 1, data.length)
+				}]
+			}
+		}
+
+		await ctx.update(payload)
 	}
 
 	async handleWarning(ctx) {

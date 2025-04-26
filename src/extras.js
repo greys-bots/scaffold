@@ -7,13 +7,13 @@ module.exports = {
 		return [
 			{
 				type: 2,
-				emoji: '⏮️',
+				emoji: {name: '⏮️'},
 				style: 1,
 				custom_id: 'first'
 			},
 			{
 				type: 2,
-				emoji: '◀️',
+				emoji: {name: '◀️'},
 				style: 1,
 				custom_id: 'prev'
 			},
@@ -26,13 +26,13 @@ module.exports = {
 			},
 			{
 				type: 2,
-				emoji: '▶️',
+				emoji: {name: '▶️'},
 				style: 1,
 				custom_id: 'next'
 			},
 			{
 				type: 2,
-				emoji: '⏭️',
+				emoji: {name: '⏭️'},
 				style: 1,
 				custom_id: 'last'
 			}

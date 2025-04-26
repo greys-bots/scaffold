@@ -118,7 +118,7 @@ class CommandHandler {
 		
 		if(!result) return;
 		if(Array.isArray(result)) { //embeds
-			var message = await msg.channel.send({embeds: [result[0].embed ?? result[0]]});
+			var message = await msg.channel.send(result[0]);
 			if(result[1]) {
 				this.menus.set(message.id, {
 					user: msg.author.id,
