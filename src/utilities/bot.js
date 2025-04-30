@@ -95,14 +95,18 @@ module.exports = {
 				bot.removeListener('interactionCreate', intListener)
 
 				if(msg.components?.[0]) {
+					let cmp = {
+						type: 1,
+						components: msg.components[msg.components.length - 1].components.map(b => ({
+							...b.data,
+							disabled: true
+						}))
+					}
 					msg.edit({
-						components: [{
-							type: 1,
-							components: msg.components[0].components.map(b => ({
-								...b.data,
-								disabled: true
-							}))
-						}]
+						components: [
+							...msg.components.slice(0, msg.components.length - 1),
+							cmp
+						]
 					})
 				}
 
@@ -120,14 +124,18 @@ module.exports = {
 				bot.removeListener('interactionCreate', intListener)
 
 				if(msg.components?.[0]) {
+					let cmp = {
+						type: 1,
+						components: msg.components[msg.components.length - 1].components.map(b => ({
+							...b.data,
+							disabled: true
+						}))
+					}
 					msg.edit({
-						components: [{
-							type: 1,
-							components: msg.components[0].components.map(b => ({
-								...b.data,
-								disabled: true
-							}))
-						}]
+						components: [
+							...msg.components.slice(0, msg.components.length - 1),
+							cmp
+						]
 					})
 				}
 
@@ -145,14 +153,19 @@ module.exports = {
 				bot.removeListener('messageReactionAdd', reactListener);
 				bot.removeListener('interactionCreate', intListener);
 
+				let cmp = {
+					type: 1,
+					components: intr.message.components[intr.message.components.length - 1].components.map(b => ({
+						...b.data,
+						disabled: true
+					}))
+				}
+
 				intr.update({
-					components: [{
-						type: 1,
-						components: intr.message.components[0].components.map(b => ({
-							...b.data,
-							disabled: true
-						}))
-					}]
+					components: [
+						...intr.message.components.slice(0, intr.message.components.length - 1),
+						cmp
+					]
 				})
 				
 				if(BUTTONS[0].includes(intr.customId)) return res({confirmed: true, interaction: intr});
