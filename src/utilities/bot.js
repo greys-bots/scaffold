@@ -52,6 +52,21 @@ module.exports = {
 			res(embeds);
 		})
 	},
+	genComps(arr, fn, limit = 10) {
+		let comps = [];
+		let cur = [];
+		for(var i = 0; i < arr.length; i++) {
+			if(cur.length == limit) {
+				comps.push(cur);
+				cur = [];
+			}
+
+			cur.push(fn(arr[i], i, arr))
+		}
+
+		comps.push(cur);
+		return comps;
+	},
 	async paginateEmbeds(bot, m, reaction) {
 		switch(reaction.emoji.name) {
 			case "⬅️":
