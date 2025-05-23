@@ -329,7 +329,11 @@ class InteractionHandler {
 					return;
 				}
 
-				return await ctx[type]({...res, ephemeral: (res.ephemeral ?? cmd.ephemeral) ?? false})
+				return await ctx[type]({
+					...res,
+					ephemeral: (res.ephemeral ?? cmd.ephemeral) ?? false,
+					flags: cmd.v2 ? ['IsComponentsV2'] : null
+				})
 		}
 	}
 
