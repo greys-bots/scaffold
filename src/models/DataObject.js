@@ -1,6 +1,6 @@
-const util = require('util');
+import { inspect } from 'util';
 
-class DataObject {
+export class DataObject {
 	store;
 
 	constructor(store, keys, data = {}) {
@@ -11,7 +11,7 @@ class DataObject {
 			this[k] = data[k];
 	}
 
-	[util.inspect.custom](depth, opts) {
+	[inspect.custom](depth, opts) {
 		var {store, ...rest} = this;
 
 		return rest;
@@ -76,4 +76,4 @@ class DataObject {
 	}
 }
 
-module.exports = DataObject;
+export default DataObject;

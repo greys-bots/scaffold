@@ -1,4 +1,4 @@
-const { Collection } = require('discord.js');
+import { Collection } from 'discord.js';
 const DKEYS = [
 	'name',
 	'description',
@@ -6,7 +6,7 @@ const DKEYS = [
 	'options'
 ]
 
-class SlashCommand {
+export class SlashCommand {
 	name;
 	description;
 	type = 1;
@@ -67,4 +67,4 @@ class SlashCommand {
 	}
 }
 
-module.exports = SlashCommand;
+export default SlashCommand;

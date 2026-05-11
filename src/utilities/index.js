@@ -1,7 +1,7 @@
-const bot = require('./bot'),
-	  common = require('./common');
+import bot from './bot.js';
+import common from './common.js';
 
-module.exports = {
+export default {
 	...bot,
 	...common
 }

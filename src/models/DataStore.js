@@ -1,6 +1,6 @@
-const util = require('util');
+import { inspect } from 'util';
 
-class DataStore {
+export class DataStore {
 	bot;
 	db;
 
@@ -9,7 +9,7 @@ class DataStore {
 		this.db = db;
 	}
 
-	[util.inspect.custom](depth, opts) {
+	[inspect.custom](depth, opts) {
 		var {bot, db, ...rest} = this;
 
 		return rest;
@@ -27,4 +27,4 @@ class DataStore {
 	async deleteAll(data) { }
 }
 
-module.exports = DataStore;
+export default DataStore;

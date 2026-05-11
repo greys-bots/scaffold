@@ -1,6 +1,6 @@
-const { Client } = require('discord.js');
+import { Client } from 'discord.js';
 
-class FrameClient extends Client {
+export class FrameClient extends Client {
 	prefix = 'bot!';
 	statuses = [
 		`${this.prefix}h`
@@ -35,4 +35,4 @@ class FrameClient extends Client {
 	}
 }
 
-module.exports = FrameClient;
+export default FrameClient;

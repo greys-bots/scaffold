@@ -1,9 +1,9 @@
-const SlashCommand = require('./SlashCommand');
-const TextCommand = require('./TextCommand');
-const DataStore = require('./DataStore');
-const DataObject = require('./DataObject');
+import SlashCommand from './SlashCommand.js';
+import TextCommand from './TextCommand.js';
+import DataStore from './DataStore.js';
+import DataObject from './DataObject.js';
 
-module.exports = {
+export default {
 	SlashCommand,
 	TextCommand,
 	DataStore,

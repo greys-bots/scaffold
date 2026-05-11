@@ -1,14 +1,8 @@
-const {
-	Collection
-} = require('discord.js');
-const { REST } = require('@discordjs/rest');
-const {
-	Routes,
-	InteractionType,
-	ComponentType
-} = require('discord-api-types/v10');
-const { pageBtns: PAGE } = require('../extras');
-const axios = require('axios');
+import { Collection } from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes, InteractionType, ComponentType } from 'discord-api-types/v10';
+import { pageBtns as PAGE } from '../extras.js';
+import * as axios from 'axios';
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
@@ -52,9 +46,8 @@ class InteractionHandler {
 			var mods = path_frags.slice(1, -1); // the module names (folders SHOULD = mod name)
 			var file = path_frags[path_frags.length - 1]; // the actual file name
 			if(file == '__mod.js') continue; // ignore mod files, only load if command exists
-			delete require.cache[require.resolve(f)]; // for reloading
 			
-			var command = require(f)(this.bot, this.bot.stores); // again, full command data
+			var command = (await import('file://' + f)).default(this.bot, this.bot.stores);
 
 			// if the commands are part of modules,
 			// then we need to nest them into those modules for parsing
@@ -74,9 +67,8 @@ class InteractionHandler {
 					if(!group) {
 						// no group data? we need to create it
 						var mod;
-						delete require.cache[require.resolve(this.commandPath + `/${mods.slice(0, i + 1).join("/")}/__mod.js`)];
 						var ms = mods.slice(0, i + 1);
-						mod = require(this.commandPath + `/${ms.join("/")}/__mod.js`)(this.bot, this.bot.store);
+						mod = (await import('file://' + this.commandPath + `/${ms.join("/")}/__mod.js`)).default(this.bot, this.bot.store);
 						group = mod;
 						group.type = group.type ?? 1;
 
@@ -478,4 +470,4 @@ class InteractionHandler {
 	}
 }
 
-module.exports = (bot, path, sharded) => new InteractionHandler(bot, path, sharded);
+export default (bot, path, sharded) => new InteractionHandler(bot, path, sharded);

@@ -1,7 +1,7 @@
-const fs = require('fs');
-const { Pool } = require('pg');
+import { readdirSync } from 'fs';
+import { Pool } from 'pg';
 
-module.exports = async (bot, path) => {
+export default async (bot, path) => {
 	const db = new Pool();
 
 	// ty pluralkit for the hid generator <3
@@ -44,16 +44,16 @@ module.exports = async (bot, path) => {
 	`)
 
 	var stores = {};
-	var files = fs.readdirSync(path);
+	var files = readdirSync(path);
 	for(var file of files) {
 		if(!file.endsWith('.js')) continue;
 		var name = file.replace(/\.js/i, "");
-		stores[name] = require(path+'/'+file)(bot, db);
+		stores[name] = (await import(`file://${path}/${file}`)).default(bot, db);
 		if(stores[name].init) await stores[name].init();
 	}
 
 	try {
-		files = fs.readdirSync(path + '/migrations');
+		files = readdirSync('file://' + path + '/migrations');
 		files = files.sort((a, b) => {
 			a = parseInt(a.slice(0, -3));
 			b = parseInt(b.slice(0, -3));
@@ -65,7 +65,7 @@ module.exports = async (bot, path) => {
 		if(files.length > version + 1) {
 			for(var i = version + 1; i < files.length; i++) {
 				if(!files[i]) continue;
-				var migration = require(`${path}/migrations/${files[i]}`);
+				var migration = await import(`file://${path}/migrations/${files[i]}`);
 				try {
 					await migration(bot, db);
 				} catch(e) {

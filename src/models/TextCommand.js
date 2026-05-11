@@ -1,6 +1,6 @@
-const { Collection } = require('discord.js');
+import { Collection } from 'discord.js';
 
-class TextCommand {
+export class TextCommand {
 	name;
 	description;
 	extra;
@@ -41,4 +41,4 @@ class TextCommand {
 	}
 }
 
-module.exports = TextCommand;
+export default TextCommand;

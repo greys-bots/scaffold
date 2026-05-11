@@ -1,9 +1,7 @@
-const CommandHandler = require('./command'),
-	  DatabaseHandler = require('./database'),
-	  InteractionHandler = require('./interaction');
+import DatabaseHandler from './database.js';
+import InteractionHandler from './interaction.js';
 
-module.exports = {
-	CommandHandler,
+export default {
 	DatabaseHandler,
 	InteractionHandler
 }
