@@ -53,7 +53,7 @@ export default async (bot, path) => {
 	}
 
 	try {
-		files = readdirSync('file://' + path + '/migrations');
+		files = readdirSync(path + '/migrations');
 		files = files.sort((a, b) => {
 			a = parseInt(a.slice(0, -3));
 			b = parseInt(b.slice(0, -3));
